@@ -205,7 +205,7 @@ var sendNextShipInfo = function(sender) {
 			var shipName = shipData[offset].shipName;
 			var firmName = shipData[1 + offset].firmName;
 			var arrivalTime = shipData[2 + offset].arrivalTime;
-			
+
 			var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName + '.';
 
 			console.log('sending reply ' + messageText);
@@ -266,7 +266,7 @@ router.post('/webhook', function (req, res) {
 		if (event.message && event.message.text) {
 			var text = event.message.text;
 			console.log('message received ', text);
-			if (text === 'seuraava') {
+			if (text === 'seuraava' || text === 'Seuraava') {
 				console.log('messenger asking for next ship!');
 				sendNextShipInfo(sender);
 				continue;
