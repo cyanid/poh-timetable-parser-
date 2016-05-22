@@ -170,6 +170,8 @@ var fetchShipDataHistory = function(domain, res) {
 };
 
 var sendTextMessage = function(sender, text) {
+	console.log('sending messenger msg ' + text);
+
 	var messageData = {
 		text:text
 	};
@@ -193,6 +195,8 @@ var sendTextMessage = function(sender, text) {
 var sendNextShipInfo = function(sender) {
 	var shipData = fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset');
 
+	console.log('ship data', shipData);
+
 	var offset = 0;
 	
 	var shipName = shipData[offset].shipName;
@@ -200,6 +204,8 @@ var sendNextShipInfo = function(sender) {
 	var arrivalTime = shipData[2 + offset].arrivalTime;
 	
 	var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
+
+	console.log('sending reply ' + messageText);
 
 	sendTextMessage(sender, messageText);
 };
@@ -251,8 +257,8 @@ router.post('/webhook', function (req, res) {
 		if (event.message && event.message.text) {
 			var text = event.message.text;
 			if (text === 'seuraava') {
+				console.log('messenger asking for next ship!');
 				sendNextShipInfo(sender);
-				continue;
 			} else if (text === 'test_bot') {
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 			}
