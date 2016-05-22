@@ -250,6 +250,8 @@ router.get('/webhook', function (req, res) {
 });
 
 router.post('/webhook', function (req, res) {
+	console.log('FB messenger webhook called');
+
 	var messaging_events = req.body.entry[0].messaging;
 	for (var i = 0; i < messaging_events.length; i++) {
 		var event = req.body.entry[0].messaging[i];
@@ -260,6 +262,7 @@ router.post('/webhook', function (req, res) {
 				console.log('messenger asking for next ship!');
 				sendNextShipInfo(sender);
 			} else if (text === 'test_bot') {
+				console.log('test bot');
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
 			}
 		}
