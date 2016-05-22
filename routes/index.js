@@ -150,4 +150,11 @@ router.get('/shipDataHistory', function (req, res, next) {
 	});
 });
 
+router.get('/webhook', function (req, res) {
+	if (req.query['hub.verify_token'] === 'vihis666') {
+		return res.status(200).json(req.query['hub.challenge']);
+	}
+	return res.status(403).json({"status":"wrong code"});
+});
+
 module.exports = router;
