@@ -280,11 +280,12 @@ router.post('/webhook', function (req, res) {
 	return res.status(200).json({});
 });
 
-// Slack integration
+// Slack integration, not working now
+/*
 var Botkit = require('botkit');
 var controller = Botkit.slackbot();
 var bot = controller.spawn({
-	token: 'xoxb-44878508183-TRuw54dl2Kjtm3STbU1vhfut'
+	token: 'asdf'
 });
 bot.startRTM(function(err,bot,payload) {
 	if (err) {
@@ -315,5 +316,6 @@ controller.hears(["keyword","^viharatikka seuraava$"],["direct_message","direct_
 		}
 	});
 });
+*/
 
 module.exports = router;
