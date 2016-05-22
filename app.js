@@ -9,6 +9,9 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 
+var passport = require('passport-slack');
+var SlackStrategy = require('passport-slack').Strategy;
+
 var app = express();
 
 var allowCrossDomain = function(req, res, next) {
@@ -68,5 +71,25 @@ app.use(function (err, req, res, next) {
 app.listen(3000, function () {
 	console.log('App listening on port 3000!');
 });
+
+if (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET) {
+	passport.use(new SlackStrategy({
+			clientID: process.env.SLACK_CLIENT_ID,
+			clientSecret: process.env.SLACK_CLIENT_SECRET
+		},
+		function (accessToken, refreshToken, profile, done) {
+			return done(err, {"success": true});
+		}
+	));
+
+	app.get('/slackAuth',
+		passport.authorize('slack'));
+
+	app.get('/slackAuth/callback',
+		passport.authorize('slack', { failureRedirect: '/login' }),
+		function(req, res) {
+			res.redirect('/');
+		});
+}
 
 module.exports = app;

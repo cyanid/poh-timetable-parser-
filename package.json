@@ -19,6 +19,7 @@
     "morgan": "~1.6.1",
     "newrelic": "^1.27.2",
     "node-cache": "^3.2.1",
+    "passport-slack": "0.0.6",
     "request": "^2.72.0",
     "serve-favicon": "~2.3.0",
     "whatwg-url": "^2.0.1"
