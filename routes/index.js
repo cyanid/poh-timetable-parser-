@@ -9,7 +9,7 @@ var myCache = new NodeCache( { stdTTL: 300, checkperiod: 120 } );
 
 var fbPageAccesstoken = "EAAPbZA7snQ1sBAO3Rw3d4Y4R2T99hmX9ToalXkZAF0y02OdFqJ32yg6ZArduJtR4TswLJwZA8VkfP5CqofvCBlta75iobK3hwLuSy4iVysrSEr2pMdBpfXjAptpZBe67kKkr4ZB202hioYvoJfRXqv1c6vl2M7sOrOLScN1c3VcAZDZD";
 
-
+//Web requests
 router.get('/', function (req, res, next) {
 	res.render('index');
 });
@@ -278,6 +278,42 @@ router.post('/webhook', function (req, res) {
 		}
 	}
 	return res.status(200).json({});
+});
+
+// Slack integration
+var Botkit = require('botkit');
+var controller = Botkit.slackbot();
+var bot = controller.spawn({
+	token: 'xoxb-44878508183-TRuw54dl2Kjtm3STbU1vhfut'
+});
+bot.startRTM(function(err,bot,payload) {
+	if (err) {
+		throw new Error('Could not connect to Slack');
+	}
+});
+
+controller.hears(["keyword","^viharatikka seuraava$"],["direct_message","direct_mention","mention","ambient"],function(bot,message) {
+	console.log('Slack bot heard a message ' + message);
+
+	fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset', function(shipData) {
+		if (shipData) {
+			console.log('got ship data');
+
+			var offset = 0;
+
+			var shipName = shipData[offset].shipName;
+			var firmName = shipData[1 + offset].firmName;
+			var arrivalTime = shipData[2 + offset].arrivalTime;
+
+			var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName + '.';
+
+			console.log('sending reply ' + messageText);
+
+			bot.reply(message, 'Kysyit seuraavaa laivaa viharatikka-botilta. Vastaus: ' + messageText);
+		} else {
+			console.error('no ship data :(')
+		}
+	});
 });
 
 module.exports = router;
