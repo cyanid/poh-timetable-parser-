@@ -205,10 +205,8 @@ var sendNextShipInfo = function(sender) {
 			var shipName = shipData[offset].shipName;
 			var firmName = shipData[1 + offset].firmName;
 			var arrivalTime = shipData[2 + offset].arrivalTime;
-
-			var arrivalMoment = moment(arrivalTime, "D.M.YYYY HH:mm");
-
-			var messageText = 'Seuraava laiva saapuu ' + arrivalMoment.toString() + '. Laiva on ' + firmName + ' ' + shipName + '.';
+			
+			var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName + '.';
 
 			console.log('sending reply ' + messageText);
 
