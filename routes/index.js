@@ -13,7 +13,7 @@ router.get('/', function (req, res, next) {
 	res.render('index');
 });
 
-var fetchShipDataRaw = function(domain) {
+var fetchShipDataRaw = function(domain, callback) {
 	request(domain, function(err, resp, html) {
 		if (err) {
 			console.error(err);
@@ -58,7 +58,9 @@ var fetchShipDataRaw = function(domain) {
 				}
 			});
 
-			return shipData;
+			if (callback) {
+				callback(shipData);
+			}
 		});
 	});
 };
@@ -193,21 +195,21 @@ var sendTextMessage = function(sender, text) {
 };
 
 var sendNextShipInfo = function(sender) {
-	var shipData = fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset');
+	fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset', function(shipData) {
+		console.log('ship data', shipData);
 
-	console.log('ship data', shipData);
+		var offset = 0;
 
-	var offset = 0;
-	
-	var shipName = shipData[offset].shipName;
-	var firmName = shipData[1 + offset].firmName;
-	var arrivalTime = shipData[2 + offset].arrivalTime;
-	
-	var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
+		var shipName = shipData[offset].shipName;
+		var firmName = shipData[1 + offset].firmName;
+		var arrivalTime = shipData[2 + offset].arrivalTime;
 
-	console.log('sending reply ' + messageText);
+		var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
 
-	sendTextMessage(sender, messageText);
+		console.log('sending reply ' + messageText);
+
+		sendTextMessage(sender, messageText);
+	});
 };
 
 router.get('/shipData', function (req, res, next) {
