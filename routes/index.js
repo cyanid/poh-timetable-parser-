@@ -258,12 +258,15 @@ router.post('/webhook', function (req, res) {
 		var sender = event.sender.id;
 		if (event.message && event.message.text) {
 			var text = event.message.text;
+			console.log('message received ', text);
 			if (text === 'seuraava') {
 				console.log('messenger asking for next ship!');
 				sendNextShipInfo(sender);
+				continue;
 			} else if (text === 'test_bot') {
 				console.log('test bot');
 				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200));
+				continue;
 			}
 		}
 	}
