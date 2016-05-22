@@ -6,10 +6,11 @@ var request = require('request');
 var NodeCache = require( "node-cache" );
 var myCache = new NodeCache( { stdTTL: 300, checkperiod: 120 } );
 
+var fbPageAccesstoken = "EAAPbZA7snQ1sBAO3Rw3d4Y4R2T99hmX9ToalXkZAF0y02OdFqJ32yg6ZArduJtR4TswLJwZA8VkfP5CqofvCBlta75iobK3hwLuSy4iVysrSEr2pMdBpfXjAptpZBe67kKkr4ZB202hioYvoJfRXqv1c6vl2M7sOrOLScN1c3VcAZDZD";
+
 
 router.get('/', function (req, res, next) {
 	res.render('index');
-
 });
 
 var fetchShipData = function(domain, res) {
@@ -118,6 +119,27 @@ var fetchShipDataHistory = function(domain, res) {
 	});
 };
 
+var sendTextMessage = function(sender, text) {
+	var messageData = {
+		text:text
+	};
+	request({
+		url: 'https://graph.facebook.com/v2.6/me/messages',
+		qs: {access_token:fbPageAccesstoken},
+		method: 'POST',
+		json: {
+			recipient: {id:sender},
+			message: messageData
+		}
+	}, function(error, response, body) {
+		if (error) {
+			console.error('Error sending message: ', error);
+		} else if (response.body.error) {
+			console.error('Error: ', response.body.error);
+		}
+	});
+};
+
 router.get('/shipData', function (req, res, next) {
 	var domain = 'http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset';
 
@@ -155,6 +177,20 @@ router.get('/webhook', function (req, res) {
 		return res.status(200).json((parseInt(req.query['hub.challenge'])));
 	}
 	return res.status(403).json({"status":"wrong code"});
+});
+
+router.post('/webhook', function (req, res) {
+	var messaging_events = req.body.entry[0].messaging;
+	for (var i = 0; i < messaging_events.length; i++) {
+		var event = req.body.entry[0].messaging[i];
+		var sender = event.sender.id;
+		if (event.message && event.message.text) {
+			var text = event.message.text;
+
+			sendTextMessage(sender, "Text received, echo: "+ text.substring(0, 200));
+		}
+	}
+	return res.status(200).json({});
 });
 
 module.exports = router;
