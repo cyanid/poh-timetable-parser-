@@ -72,6 +72,7 @@ app.listen(3000, function () {
 	console.log('App listening on port 3000!');
 });
 
+/*
 if (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET) {
 	passport.use(new SlackStrategy({
 			clientID: process.env.SLACK_CLIENT_ID,
@@ -90,6 +91,6 @@ if (process.env.SLACK_CLIENT_ID && process.env.SLACK_CLIENT_SECRET) {
 		function(req, res) {
 			res.redirect('/');
 		});
-}
+}*/
 
 module.exports = app;
