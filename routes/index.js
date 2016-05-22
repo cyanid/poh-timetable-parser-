@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var request = require('request');
+var moment = require('moment');
 
 var NodeCache = require( "node-cache" );
 var myCache = new NodeCache( { stdTTL: 300, checkperiod: 120 } );
@@ -205,7 +206,9 @@ var sendNextShipInfo = function(sender) {
 			var firmName = shipData[1 + offset].firmName;
 			var arrivalTime = shipData[2 + offset].arrivalTime;
 
-			var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
+			var arrivalMoment = moment(arrivalTime, "D.M.YYYY HH:mm");
+
+			var messageText = 'Seuraava laiva saapuu ' + arrivalMoment.toString() + '. Laiva on ' + firmName + ' ' + shipName + '.';
 
 			console.log('sending reply ' + messageText);
 
