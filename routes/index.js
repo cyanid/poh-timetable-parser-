@@ -196,19 +196,23 @@ var sendTextMessage = function(sender, text) {
 
 var sendNextShipInfo = function(sender) {
 	fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset', function(shipData) {
-		console.log('ship data', shipData);
+		if (shipData) {
+			console.log('got ship data');
 
-		var offset = 0;
+			var offset = 0;
 
-		var shipName = shipData[offset].shipName;
-		var firmName = shipData[1 + offset].firmName;
-		var arrivalTime = shipData[2 + offset].arrivalTime;
+			var shipName = shipData[offset].shipName;
+			var firmName = shipData[1 + offset].firmName;
+			var arrivalTime = shipData[2 + offset].arrivalTime;
 
-		var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
+			var messageText = 'Seuraava laiva saapuu ' + arrivalTime + '. Laiva on ' + firmName + ' ' + shipName;
 
-		console.log('sending reply ' + messageText);
+			console.log('sending reply ' + messageText);
 
-		sendTextMessage(sender, messageText);
+			sendTextMessage(sender, messageText);
+		} else {
+			console.error('no ship data :(')
+		}
 	});
 };
 
