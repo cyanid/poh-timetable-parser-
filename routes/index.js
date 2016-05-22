@@ -7,7 +7,7 @@ var moment = require('moment');
 var NodeCache = require( "node-cache" );
 var myCache = new NodeCache( { stdTTL: 300, checkperiod: 120 } );
 
-var fbPageAccesstoken = "EAAPbZA7snQ1sBAO3Rw3d4Y4R2T99hmX9ToalXkZAF0y02OdFqJ32yg6ZArduJtR4TswLJwZA8VkfP5CqofvCBlta75iobK3hwLuSy4iVysrSEr2pMdBpfXjAptpZBe67kKkr4ZB202hioYvoJfRXqv1c6vl2M7sOrOLScN1c3VcAZDZD";
+var fbPageAccesstoken = process.env.FB_PAGE_ACCESS_TOKEN;
 
 //Web requests
 router.get('/', function (req, res, next) {
