@@ -310,7 +310,7 @@ if (process.env.PP_SLACK_BOT_TOKEN) {
 
 				console.log('sending reply ' + messageText);
 
-				bot.reply(message, 'Kysyit seuraavaa laivaa viharatikka-botilta. Vastaus: ' + messageText);
+				bot.reply(message, messageText);
 			} else {
 				console.error('no ship data :(')
 			}
