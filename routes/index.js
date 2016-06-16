@@ -293,7 +293,7 @@ if (process.env.PP_SLACK_BOT_TOKEN) {
 		}
 	});
 
-	controller.hears(["keyword", "^viharatikka seuraava$"], ["direct_message", "direct_mention", "mention", "ambient"], function (bot, message) {
+	controller.hears(["^viharatikka seuraava$"], ["direct_message", "direct_mention", "mention", "ambient"], function (bot, message) {
 		console.log('Slack bot heard a message ' + message);
 
 		fetchShipDataRaw('http://www.portofhelsinki.fi/tavaraliikenne/saapuvat_alukset', function (shipData) {
